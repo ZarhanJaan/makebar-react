@@ -8,9 +8,11 @@ export default function Home() {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("token"); // hapus token
+      console.log("Response:", { message: "Logout successful" });
       Alert.alert("Success", "Anda sudah logout");
       router.replace("/login"); // arahkan ke login
     } catch (err: any) {
+      console.error("Logout Error:", err);
       Alert.alert("Error", err.message);
     }
   };
