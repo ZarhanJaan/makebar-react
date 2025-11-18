@@ -5,20 +5,23 @@ import { useRouter } from "expo-router";
 export default function Register() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [role, setRole] = useState("");
   const router = useRouter();
 
-  const handleRegister = async () => {
+  const handleRegister = async (selectedRole: string) => {
     try {
       const res = await fetch("http://192.168.100.7:3000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, role: selectedRole }),
       });
       const data = await res.json();
+      console.log("Response:", data);
 
-      if (data.message === "User registered successfully") {
-        Alert.alert("Success", "Akun berhasil dibuat!");
+      if (data.message === "User registered successfully as ") {
+        Alert.alert("Success", `Akun berhasil dibuat sebagai ${selectedRole}`);
         router.replace("/login"); // setelah register, arahkan ke login
+        console.log("Redirecting to login...")
       } else {
         Alert.alert("Error", data.message);
       }
@@ -48,7 +51,8 @@ export default function Register() {
         style={{ borderWidth: 1, marginBottom: 20, padding: 8 }}
       />
 
-      <Button title="Register" onPress={handleRegister} />
+      <Button title="Register sebagai user" onPress={() => handleRegister("user")} />
+      <Button title="Register sebagai penjual" onPress={() => handleRegister("penjual")} />
       <Button title="Back to Login" onPress={() => router.push("/login")} />
     </View>
   );

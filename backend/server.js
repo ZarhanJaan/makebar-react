@@ -30,21 +30,21 @@ db.connect((err) => {
 // Register endpoint
 app.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email dan password wajib diisi" });
+    const { email, password, role } = req.body;
+    if (!email || !password || !role) {
+      return res.status(400).json({ message: "Email, password dan role wajib diisi" });
     }
 
     const hashed = await bcrypt.hash(password, 10);
     db.query(
-      "INSERT INTO users (email, password) VALUES (?, ?)",
-      [email, hashed],
+      "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
+      [email, hashed, role],
       (err) => {
         if (err) {
           console.error("MySQL Error:", err.sqlMessage);
           return res.status(500).json({ message: "Error registering user", error: err.sqlMessage });
         }
-        res.json({ message: "User registered successfully" });
+        res.json({ message: "User registered successfully as ", role });
       }
     );
   } catch (error) {

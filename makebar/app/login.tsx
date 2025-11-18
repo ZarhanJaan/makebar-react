@@ -26,6 +26,7 @@ export default function Login() {
       if (data.message === "Login successful") { // ✅ cocok dengan backend
         Alert.alert("Success", "Login berhasil!");
         router.replace("/"); // arahkan ke home/index
+        console.log("Mengarahkan ke home")
       } else {
         Alert.alert("Error", data.message);
       }
