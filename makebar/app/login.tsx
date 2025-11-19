@@ -23,13 +23,29 @@ export default function Login() {
       const data = await res.json();
       console.log("Response:", data);
 
-      if (data.message === "Login successful") { // ✅ cocok dengan backend
-        Alert.alert("Success", "Login berhasil!");
-        router.replace("/"); // arahkan ke home/index
-        console.log("Mengarahkan ke home")
+      if (data.message === "Login successful") {
+        Alert.alert("Success", `login berhasil sebagai ${data.role}`);
+        
+        if (data.role === "user") {
+          router.replace("/pageUser");
+          console.log("Mengarahkan ke beranda user")
+        } else if (data.role === "penjual") {
+          router.replace("/pagePenjual");
+          console.log("Mengarahkan ke beranda penjual");
+        } else {
+          router.replace("/")
+        }
       } else {
         Alert.alert("Error", data.message);
       }
+
+      // if (data.message === "Login successful") { // ✅ cocok dengan backend
+      //   Alert.alert("Success", "Login berhasil!");
+      //   router.replace("/"); // arahkan ke home/index
+      //   console.log("Mengarahkan ke home")
+      // } else {
+      //   Alert.alert("Error", data.message);
+      // }
     } catch (err: any) {
       Alert.alert("Error", err.message);
     }
