@@ -72,7 +72,11 @@ app.post("/login", (req, res) => {
     try {
       const match = await bcrypt.compare(password, results[0].password);
       if (match) {
-        res.json({ message: "Login successful", role: results[0].role });
+        res.json({
+          message: "Login successful",
+          role: results[0].role,
+          id: results[0].id, // kirim id user
+        });
       } else {
         res.status(401).json({ message: "Invalid credentials" });
       }
@@ -82,5 +86,67 @@ app.post("/login", (req, res) => {
     }
   });
 });
+
+// endpoint tambah menu
+app.post("/menu", (req, res) => {
+  const { menu, harga, penjual_id } = req.body;
+  if (!menu || !harga || !penjual_id) {
+    return res.status(400).json({ message: "Menu, harga, dan penjual_id wajib diisi" });
+  }
+
+  db.query(
+    "INSERT INTO menus (penjual_id, menu, harga) VALUES (?, ?, ?)",
+    [penjual_id, menu, harga],
+    (err) => {
+      if (err) {
+        console.error("MySQL Error:", err.sqlMessage);
+        return res.status(500).json({ message: "Gagal menambahkan menu" });
+      }
+      res.json({ message: "Menu berhasil ditambahkan" });
+    }
+  );
+});
+
+// Update menu
+app.put("/menu/:id", (req, res) => {
+  const { id } = req.params;
+  const { menu, harga } = req.body;
+  db.query(
+    "UPDATE menus SET menu = ?, harga = ? WHERE id = ?",
+    [menu, harga, id],
+    (err) => {
+      if (err) return res.status(500).json({ message: "Gagal update menu" });
+      res.json({ message: "Menu berhasil diupdate" });
+    }
+  );
+});
+
+// Delete menu
+app.delete("/menu/:id", (req, res) => {
+  const { id } = req.params;
+  db.query("DELETE FROM menus WHERE id = ?", [id], (err) => {
+    if (err) return res.status(500).json({ message: "Gagal hapus menu" });
+    res.json({ message: "Menu berhasil dihapus" });
+  });
+});
+
+
+// Ambil semua penjual
+app.get("/penjuals", (req, res) => {
+  db.query("SELECT id, email FROM users WHERE role = 'penjual'", (err, results) => {
+    if (err) return res.status(500).json({ message: "Error mengambil penjual" });
+    res.json(results);
+  });
+});
+
+// Ambil menu berdasarkan penjualId
+app.get("/menus/:penjualId", (req, res) => {
+  const { penjualId } = req.params;
+  db.query("SELECT id, menu, harga FROM menus WHERE penjual_id = ?", [penjualId], (err, results) => {
+    if (err) return res.status(500).json({ message: "Error mengambil menu" });
+    res.json(results);
+  });
+});
+
 
 app.listen(3000, () => console.log("🚀 Server running on port 3000"));
