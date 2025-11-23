@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useState } from "react";
-import { useRouter } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
@@ -56,6 +56,7 @@ export default function Login() {
 
   return (
     <View style={{ padding: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
       <Text>Email</Text>
       <TextInput
         value={email}

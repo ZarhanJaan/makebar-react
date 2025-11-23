@@ -1,39 +1,25 @@
 import { View, Text, FlatList, TouchableOpacity, Alert, Button } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 
 export default function UserPage() {
-  const [penjualList, setPenjualList] = useState<any[]>([]);
-  const [selectedPenjual, setSelectedPenjual] = useState<any | null>(null);
-  const [menus, setMenus] = useState<any[]>([]);
+  const [penjuals, setPenjuals] = useState<{ id: number; email: string }[]>([]);
   const router = useRouter();
 
   // Ambil daftar penjual dari backend
   useEffect(() => {
-    const fetchPenjual = async () => {
+    const fetchPenjuals = async () => {
       try {
         const res = await fetch("http://192.168.100.7:3000/penjuals");
         const data = await res.json();
-        setPenjualList(data);
+        setPenjuals(data);
       } catch (err: any) {
         Alert.alert("Error", err.message);
       }
     };
-    fetchPenjual();
+    fetchPenjuals();
   }, []);
-
-  // Ambil menu dari penjual tertentu
-  const fetchMenus = async (penjualId: number) => {
-    try {
-      const res = await fetch(`http://192.168.100.7:3000/menus/${penjualId}`);
-      const data = await res.json();
-      setMenus(data);
-      setSelectedPenjual(penjualId);
-    } catch (err: any) {
-      Alert.alert("Error", err.message);
-    }
-  };
 
   // Function Logout
   const handleLogout = async () => {
@@ -49,6 +35,7 @@ export default function UserPage() {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
       <Text style={{ fontSize: 22, marginBottom: 20 }}>Halaman User</Text>
 
       {/* Tombol Logout */}
@@ -57,33 +44,22 @@ export default function UserPage() {
       {/* Daftar Penjual */}
       <Text style={{ fontSize: 18, marginVertical: 10 }}>Daftar Penjual:</Text>
       <FlatList
-        data={penjualList}
+        data={penjuals}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={{ padding: 10, borderBottomWidth: 1 }}
-            onPress={() => fetchMenus(item.id)}
+            onPress={() =>
+              router.push({
+                pathname: "/penjual/[id]", // sesuai file app/penjual/[id].tsx
+                params: { id: item.id.toString() }, // kirim id penjual
+              })
+            }
           >
             <Text>{item.email}</Text>
           </TouchableOpacity>
         )}
       />
-
-      {/* Menu dari penjual yang dipilih */}
-      {selectedPenjual && (
-        <View style={{ marginTop: 20 }}>
-          <Text style={{ fontSize: 18 }}>Menu dari Penjual {selectedPenjual}:</Text>
-          <FlatList
-            data={menus}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <Text style={{ padding: 5 }}>
-                {item.menu} - Rp {item.harga}
-              </Text>
-            )}
-          />
-        </View>
-      )}
     </View>
   );
 }

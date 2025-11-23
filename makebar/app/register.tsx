@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useState } from "react";
-import { useRouter } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 
 export default function Register() {
   const [email, setEmail] = useState<string>("");
@@ -32,6 +32,7 @@ export default function Register() {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
       <Text style={{ fontSize: 20, marginBottom: 20 }}>Register</Text>
 
       <Text>Email</Text>

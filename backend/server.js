@@ -148,5 +148,15 @@ app.get("/menus/:penjualId", (req, res) => {
   });
 });
 
+// get profil penjual
+app.get("/penjuals/:id", (req, res) => {
+  const { id } = req.params;
+  db.query("SELECT id, email, role FROM users WHERE id = ?", [id], (err, results) => {
+    if (err) return res.status(500).json({ message: "Error menampilkan profil penjual"});
+    if (results.length === 0) return res.status(404).json({ message: "Profil penjual tidak ditemukan" });
+    res.json(results[0])
+  })
+});
+
 
 app.listen(3000, () => console.log("🚀 Server running on port 3000"));

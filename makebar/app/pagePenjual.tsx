@@ -1,7 +1,7 @@
 import { View, Text, TextInput, Button, Alert, FlatList, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 
 export default function PenjualPage() {
   const [menu, setMenu] = useState("");
@@ -120,6 +120,7 @@ export default function PenjualPage() {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
       <Text style={{ fontSize: 22, marginBottom: 20 }}>Halaman Penjual</Text>
 
       <Button title="Logout" onPress={handleLogout} />
