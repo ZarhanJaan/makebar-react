@@ -1,11 +1,13 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import { useLocalSearchParams, Stack } from "expo-router";
+import { useLocalSearchParams, Stack, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function PenjualDetailPage() {
   const { id } = useLocalSearchParams(); // ambil id dari URL
   const [profil, setProfil] = useState<any>(null);
   const [menus, setMenus] = useState<{ id: number; menu: string; harga: number }[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +26,11 @@ export default function PenjualDetailPage() {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
+      <View style={{ paddingTop: 20, paddingLeft: 0 }}>
+        <TouchableOpacity onPress={() => router.back()}>
+        <Ionicons name="arrow-back" size={28} color="blue"/>
+        </TouchableOpacity>
+      </View>
     <Stack.Screen options={{ headerShown: false }} />
       {profil && (
         <>
