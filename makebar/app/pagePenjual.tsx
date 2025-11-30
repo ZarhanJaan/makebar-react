@@ -2,6 +2,7 @@ import { View, Text, TextInput, Button, Alert, FlatList, TouchableOpacity } from
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter, Stack } from "expo-router";
+import { useRoleGuard } from "@/hooks/useRoleGuard";
 
 export default function PenjualPage() {
   const [menu, setMenu] = useState("");
@@ -9,6 +10,7 @@ export default function PenjualPage() {
   const [items, setItems] = useState<{ id: number; menu: string; harga: string }[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const router = useRouter();
+  useRoleGuard("penjual");
 
   // Ambil daftar menu dari backend saat halaman dibuka
   useEffect(() => {
@@ -120,7 +122,7 @@ export default function PenjualPage() {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen options={{ headerShown: true, headerTitle: "" }} />
       <Text style={{ fontSize: 22, marginBottom: 20 }}>Halaman Penjual</Text>
 
       <Button title="Logout" onPress={handleLogout} />

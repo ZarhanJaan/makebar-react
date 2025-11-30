@@ -2,10 +2,14 @@ import { View, Text, FlatList, TouchableOpacity, Alert, Button } from "react-nat
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter, Stack } from "expo-router";
+import { useCart } from "@/context/CartContext";
+import { useRoleGuard } from "@/hooks/useRoleGuard";
 
 export default function UserPage() {
   const [penjuals, setPenjuals] = useState<{ id: number; email: string }[]>([]);
+  const { clearCart } = useCart();
   const router = useRouter();
+  useRoleGuard("user");
 
   // Ambil daftar penjual dari backend
   useEffect(() => {
@@ -26,6 +30,7 @@ export default function UserPage() {
     try {
       await AsyncStorage.removeItem("userId");
       await AsyncStorage.removeItem("role");
+      clearCart();
       Alert.alert("Success", "Anda berhasil logout");
       router.replace("/login"); // arahkan ke halaman login
     } catch (err: any) {
@@ -35,7 +40,7 @@ export default function UserPage() {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen options={{ headerShown: true, headerTitle: '' }}/>
       <Text style={{ fontSize: 22, marginBottom: 20 }}>Halaman User</Text>
 
       {/* Tombol Logout */}

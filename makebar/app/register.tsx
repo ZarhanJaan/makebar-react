@@ -5,7 +5,7 @@ import { useRouter, Stack } from "expo-router";
 export default function Register() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [role, setRole] = useState("");
+  // const [role, setRole] = useState("");
   const router = useRouter();
 
   const handleRegister = async (selectedRole: string) => {
@@ -32,7 +32,7 @@ export default function Register() {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen options={{ headerShown: true, headerTitle: '' }}/>
       <Text style={{ fontSize: 20, marginBottom: 20 }}>Register</Text>
 
       <Text>Email</Text>

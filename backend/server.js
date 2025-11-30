@@ -158,5 +158,136 @@ app.get("/penjuals/:id", (req, res) => {
   })
 });
 
+// endpoint order
+app.post("/order", (req, res) => {
+  const { user_id, penjual_id, items } = req.body;
+  if (!user_id || !penjual_id || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ message: "Data pesanan tidak lengkap" });
+  }
+
+  db.query(
+    "INSERT INTO orders (user_id, penjual_id) VALUES (?, ?)",
+    [user_id, penjual_id],
+    (err, result) => {
+      if (err) {
+        console.error("Order Error:", err.sqlMessage);
+        return res.status(500).json({ message: "Gagal membuat pesanan" });
+      }
+      const orderId = result.insertId;
+
+      const values = items.map((it) => [
+        orderId,
+        it.id,
+        it.harga,
+        it.quantity || 1
+      ]);
+
+      db.query(
+        "INSERT INTO order_items (order_id, menu_id, harga, quantity) VALUES ?",
+        [values],
+        (err2) => {
+          if (err2) {
+            console.error("Order Items Error:", err2.sqlMessage);
+            return res.status(500).json({ message: "Gagal menyimpan item pesanan" })
+          }
+          res.json({ message: "Pesanan berhasil dibuat", order_id: orderId });
+        }
+      );
+    }
+  );
+});
+
+// USER: riwayat pesanan
+app.get("/orders/user/:userId", (req, res) => {
+  const { userId } = req.params;
+  const sql = `
+    SELECT o.id as order_id, o.status, o.created_at,
+           oi.id as order_item_id, oi.quantity, oi.harga,
+           m.id as menu_id, m.menu, m.penjual_id
+    FROM orders o
+    JOIN order_items oi ON oi.order_id = o.id
+    JOIN menus m ON m.id = oi.menu_id
+    WHERE o.user_id = ?
+    ORDER BY o.created_at DESC, oi.id ASC
+  `;
+  db.query(sql, [userId], (err, rows) => {
+    if (err) return res.status(500).json({ message: "Gagal mengambil riwayat pesanan" });
+
+    // Grouping per order
+    const map = new Map();
+    rows.forEach((r) => {
+      if (!map.has(r.order_id)) {
+        map.set(r.order_id, {
+          order_id: r.order_id,
+          status: r.status,
+          created_at: r.created_at,
+          items: []
+        });
+      }
+      map.get(r.order_id).items.push({
+        order_item_id: r.order_item_id,
+        menu_id: r.menu_id,
+        menu: r.menu,
+        harga: r.harga,
+        quantity: r.quantity,
+        penjual_id: r.penjual_id
+      });
+    });
+    res.json(Array.from(map.values()));
+  });
+});
+
+// PENJUAL: Pesanan masuk
+app.get("/orders/penjual/:penjualId", (req, res) => {
+  const { penjualId } = req.params;
+  const sql = `
+    SELECT o.id as order_id, o.user_id, o.status, o.created_at,
+           oi.id as order_item_id, oi.quantity, oi.harga,
+           m.id as menu_id, m.menu
+    FROM orders o
+    JOIN order_items oi ON oi.order_id = o.id
+    JOIN menus m ON m.id = oi.menu_id
+    WHERE o.penjual_id = ?
+    ORDER BY o.created_at DESC, oi.id ASC
+  `;
+  db.query(sql, [penjualId], (err, rows) => {
+    if (err) return res.status(500).json({ message: "Gagal mengambil pesanan penjual" });
+
+    const map = new Map();
+    rows.forEach((r) => {
+      if (!map.has(r.order_id)) {
+        map.set(r.order_id, {
+          order_id: r.order_id,
+          user_id: r.user_id,
+          status: r.status,
+          created_at: r.created_at,
+          items: []
+        });
+      }
+      map.get(r.order_id).items.push({
+        order_item_id: r.order_item_id,
+        menu_id: r.menu_id,
+        menu: r.menu,
+        harga: r.harga,
+        quantity: r.quantity
+      });
+    });
+    res.json(Array.from(map.values()));
+  });
+});
+
+// Update status order (opsional)
+app.put("/orders/:orderId/status", (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+  const allowed = ["pending", "confirmed", "completed", "cancelled"];
+  if (!allowed.includes(status)) return res.status(400).json({ message: "Status tidak valid" });
+
+  db.query("UPDATE orders SET status = ? WHERE id = ?", [status, orderId], (err) => {
+    if (err) return res.status(500).json({ message: "Gagal update status" });
+    res.json({ message: "Status pesanan diperbarui" });
+  });
+});
+
 
 app.listen(3000, () => console.log("🚀 Server running on port 3000"));

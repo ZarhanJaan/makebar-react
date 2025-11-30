@@ -2,6 +2,7 @@ import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useState } from "react";
 import { useRouter, Stack } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setStatusBarHidden } from "expo-status-bar";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -30,7 +31,6 @@ export default function Login() {
       console.log("Response:", data);
 
       if (data.message === "Login successful") {
-        Alert.alert("Success", `Login berhasil sebagai ${data.role}`);
 
         // simpan id dan role ke AsyncStorage
         await AsyncStorage.setItem("userId", data.id.toString());
@@ -39,12 +39,15 @@ export default function Login() {
         // redirect sesuai role
         if (data.role === "user") {
           router.replace("/pageUser");
+          Alert.alert("Success", `Login berhasil sebagai ${email}`);
           console.log("Mengarahkan ke beranda user");
         } else if (data.role === "penjual") {
           router.replace("/pagePenjual");
+          Alert.alert("Success", `Login berhasil sebagai ${email}`);
           console.log("Mengarahkan ke beranda penjual");
         } else {
-          router.replace("/");
+          Alert.alert("Error", "Role tidak dikenal")
+          console.log("Role pada akun adalah anomali, tidak dikenali")
         }
       } else {
         Alert.alert("Error", data.message);
@@ -56,7 +59,7 @@ export default function Login() {
 
   return (
     <View style={{ padding: 20 }}>
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen options={{ headerShown: true, headerTitle: '' }}/>
       <Text>Email</Text>
       <TextInput
         value={email}
