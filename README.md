@@ -1,43 +1,35 @@
 # 🍹 Makebar React & Express Backend
 
-Aplikasi full‑stack untuk sistem pemesanan makanan/minuman sederhana.  
-Frontend dibuat dengan **React Native (Expo)**, sedangkan backend menggunakan **Express.js + MySQL** (hosted di WispByte).
+A full‑stack food and beverage ordering system.  
+Frontend built with **React Native (Expo)**, backend powered by **Express.js + MySQL**.
 
 ---
 
-## ✨ Fitur Utama
-- **Autentikasi User & Penjual**
-  - Register & Login dengan hashing password (bcrypt).
-  - Role‑based: `user` dan `penjual`.
-
-- **Manajemen Menu**
-  - Penjual dapat menambahkan, mengedit, dan menghapus menu.
-  - User dapat melihat daftar menu dari penjual.
-
-- **Keranjang & Pesanan**
-  - User dapat menambahkan menu ke keranjang.
-  - Checkout pesanan → tersimpan di database.
-  - Riwayat pesanan untuk user.
-  - Pesanan masuk untuk penjual.
-
-- **Order Management**
-  - Update status pesanan (`pending`, `confirmed`, `completed`, `cancelled`).
+## 📖 Description
+Makebar is a simple ordering app where **users** can browse menus, add items to their cart, and place orders, while **sellers** manage menus and track incoming orders. It includes authentication, role‑based access, cart, order history, and status updates.
 
 ---
 
-## 🛠️ Teknologi
+## ✨ Features
+- User & Seller authentication (register/login with bcrypt)
+- Role‑based access (`user` and `seller`)
+- Menu management (add, edit, delete)
+- Cart & checkout flow
+- Order history for users
+- Incoming orders for sellers
+- Order status updates (`pending`, `confirmed`, `completed`, `cancelled`)
+
+---
+
+## 🛠️ Tech Stack
 - **Frontend:** React Native (Expo), TypeScript
 - **Backend:** Node.js, Express.js
-- **Database:** MySQL (WispByte)
-- **Library utama:**
-  - `mysql2` → koneksi database
-  - `bcrypt` → hashing password
-  - `cors` → akses API lintas origin
-  - `dotenv` → konfigurasi environment
+- **Database:** MySQL (WispByte hosting)
+- **Libraries:** mysql2, bcrypt, cors, dotenv
 
 ---
 
-## ⚙️ Instalasi & Setup
+## ⚙️ Installation
 
 ### 1. Clone Repository
 ```bash
