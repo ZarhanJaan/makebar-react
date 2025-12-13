@@ -31,33 +31,94 @@ export default function PenjualDetailPage() {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      {/* <TouchableOpacity onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={28} color="blue" />
-      </TouchableOpacity> */}
-      <Stack.Screen options={{ headerShown: true, headerTitle: '' }}/>
+    <View style={{ flex: 1, backgroundColor: "#f9fafb", padding: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
 
+      {/* Tombol Back */}
+      <TouchableOpacity
+        onPress={() => router.back()}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: 20,
+          marginBottom: 20,
+        }}
+      >
+        <Ionicons name="arrow-back" size={28} color="#4f46e5" />
+        <Text style={{ marginLeft: 8, fontSize: 16, color: "#4f46e5", fontWeight: "600" }}>
+          Back
+        </Text>
+      </TouchableOpacity>
+
+      {/* Profil Penjual */}
       {profil && (
         <>
-          <Text style={{ fontSize: 22, marginBottom: 10 }}>{profil.email}</Text>
+          <Text
+            style={{
+              fontSize: 28,
+              fontWeight: "bold",
+              color: "#1f2937",
+              textAlign: "center",
+              marginBottom: 4,
+            }}
+          >
+            {profil.email}
+          </Text>
+          <Text
+            style={{
+              fontSize: 16,
+              color: "#6b7280",
+              textAlign: "center",
+              marginBottom: 24,
+            }}
+          >
+            Menu yang tersedia dari penjual ini
+          </Text>
         </>
       )}
 
-      <Text style={{ fontSize: 20, marginTop: 20 }}>Menu:</Text>
+      {/* Daftar Menu */}
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: "600",
+          color: "#374151",
+          marginBottom: 12,
+        }}
+      >
+        Menu:
+      </Text>
       <FlatList
         data={menus}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View
             style={{
+              backgroundColor: "#fff",
+              padding: 14,
+              borderRadius: 8,
+              marginBottom: 12,
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingVertical: 8,
+              alignItems: "center",
+              shadowColor: "#000",
+              shadowOpacity: 0.05,
+              shadowRadius: 4,
+              elevation: 2,
             }}
           >
-            <Text>{item.menu} - Rp {item.harga}</Text>
-            <TouchableOpacity onPress={() => addToCart(item)}>
-              <Ionicons name="cart" size={24} color="green" />
+            <Text style={{ fontSize: 16, fontWeight: "500", color: "#1f2937" }}>
+              {item.menu} - Rp {item.harga}
+            </Text>
+            <TouchableOpacity
+              onPress={() => addToCart(item)}
+              style={{
+                backgroundColor: "#10b981",
+                padding: 8,
+                borderRadius: 8,
+              }}
+            >
+              <Ionicons name="cart" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
         )}

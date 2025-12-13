@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { View, Text, TextInput, Button, Alert, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { useRouter, Stack } from "expo-router";
 
@@ -31,30 +31,74 @@ export default function Register() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
-      <Stack.Screen options={{ headerShown: true, headerTitle: '' }}/>
-      <Text style={{ fontSize: 20, marginBottom: 20 }}>Register</Text>
+    <View style={{ flex: 1, backgroundColor: "#f9fafb", justifyContent: "center", padding: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
 
-      <Text>Email</Text>
+      <Text style={{ fontSize: 28, fontWeight: "bold", color: "#1f2937", textAlign: "center", marginBottom: 4 }}>
+        Create Account ✨
+      </Text>
+      <Text style={{ fontSize: 16, color: "#6b7280", textAlign: "center", marginBottom: 24 }}>
+        Register to get started
+      </Text>
+
+      <Text style={{ fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 6 }}>Email</Text>
       <TextInput
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
-        style={{ borderWidth: 1, marginBottom: 10, padding: 8 }}
+        placeholder="Enter your email"
+        placeholderTextColor="#aaa"
+        style={{
+          borderWidth: 1,
+          borderColor: "#d1d5db",
+          borderRadius: 8,
+          padding: 12,
+          marginBottom: 16,
+          backgroundColor: "#fff",
+        }}
       />
 
-      <Text>Password</Text>
+      <Text style={{ fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 6 }}>Password</Text>
       <TextInput
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={{ borderWidth: 1, marginBottom: 20, padding: 8 }}
+        placeholder="Enter your password"
+        placeholderTextColor="#aaa"
+        style={{
+          borderWidth: 1,
+          borderColor: "#d1d5db",
+          borderRadius: 8,
+          padding: 12,
+          marginBottom: 20,
+          backgroundColor: "#fff",
+        }}
       />
 
-      <Button title="Register sebagai user" onPress={() => handleRegister("user")} />
-      <Button title="Register sebagai penjual" onPress={() => handleRegister("penjual")} />
-      <Button title="Back to Login" onPress={() => router.push("/login")} />
+      <TouchableOpacity
+        onPress={() => handleRegister("user")}
+        style={{ backgroundColor: "#4f46e5", paddingVertical: 14, borderRadius: 8, marginBottom: 12 }}
+      >
+        <Text style={{ color: "#fff", fontWeight: "600", textAlign: "center", fontSize: 16 }}>
+          Register sebagai User
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => handleRegister("penjual")}
+        style={{ backgroundColor: "#4f46e5", paddingVertical: 14, borderRadius: 8, marginBottom: 12 }}
+      >
+        <Text style={{ color: "#fff", fontWeight: "600", textAlign: "center", fontSize: 16 }}>
+          Register sebagai Penjual
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.push("/login")} style={{ marginTop: 8 }}>
+        <Text style={{ color: "#4f46e5", textAlign: "center", fontSize: 14 }}>
+          Already have an account? Login
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

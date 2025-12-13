@@ -39,29 +39,49 @@ export default function UserPage() {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Stack.Screen options={{ headerShown: true, headerTitle: '', headerBackVisible: false }}/>
-      <Text style={{ fontSize: 22, marginBottom: 20 }}>Halaman User</Text>
+    <View style={{ flex: 1, backgroundColor: "#f9fafb", padding: 20 }}>
+      <Stack.Screen options={{ headerShown: false }} />
+
+      <Text style={{ fontSize: 28, fontWeight: "bold", color: "#1f2937", textAlign: "center", marginBottom: 4, marginTop: 40 }}>
+        Halaman User 👤
+      </Text>
+      <Text style={{ fontSize: 16, color: "#6b7280", textAlign: "center", marginBottom: 24 }}>
+        Manage your account and explore sellers
+      </Text>
 
       {/* Tombol Logout */}
-      <Button title="Logout" onPress={handleLogout} />
+      <TouchableOpacity
+        onPress={handleLogout}
+        style={{ backgroundColor: "#ef4444", paddingVertical: 14, borderRadius: 8, marginBottom: 20 }}
+      >
+        <Text style={{ color: "#fff", fontWeight: "600", textAlign: "center", fontSize: 16 }}>Logout</Text>
+      </TouchableOpacity>
 
       {/* Daftar Penjual */}
-      <Text style={{ fontSize: 18, marginVertical: 10 }}>Daftar Penjual:</Text>
+      <Text style={{ fontSize: 18, fontWeight: "600", color: "#374151", marginBottom: 12 }}>Daftar Penjual</Text>
       <FlatList
         data={penjuals}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={{ padding: 10, borderBottomWidth: 1 }}
+            style={{
+              backgroundColor: "#fff",
+              padding: 14,
+              borderRadius: 8,
+              marginBottom: 12,
+              shadowColor: "#000",
+              shadowOpacity: 0.05,
+              shadowRadius: 4,
+              elevation: 2,
+            }}
             onPress={() =>
               router.push({
-                pathname: "/penjual/[id]", // sesuai file app/penjual/[id].tsx
-                params: { id: item.id.toString() }, // kirim id penjual
+                pathname: "/penjual/[id]",
+                params: { id: item.id.toString() },
               })
             }
           >
-            <Text>{item.email}</Text>
+            <Text style={{ fontSize: 16, fontWeight: "500", color: "#1f2937" }}>{item.email}</Text>
           </TouchableOpacity>
         )}
       />

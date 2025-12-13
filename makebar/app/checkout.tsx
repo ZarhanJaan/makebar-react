@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useCart } from "../context/CartContext";
 import { useRouter, Stack } from "expo-router";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { Ionicons } from "@expo/vector-icons";
 
 type CartItem = {
   id: number;
@@ -47,65 +48,122 @@ export default function CheckoutPage() {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 120 }}>
-      <Stack.Screen options={{ headerShown: true, headerTitle: "" }} />
+    <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 120, backgroundColor: "#f9fafb" }}>
+      <Stack.Screen options={{ headerShown: false }} />
 
+      {/* Tombol Back */}
+      <TouchableOpacity
+        onPress={() => router.back()}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: 20,
+          marginBottom: 20,
+        }}
+      >
+        <Ionicons name="arrow-back" size={28} color="#4f46e5" />
+        <Text style={{ marginLeft: 8, fontSize: 16, color: "#4f46e5", fontWeight: "600" }}>
+          Back
+        </Text>
+      </TouchableOpacity>
+
+      {/* Judul */}
+      <Text
+        style={{
+          fontSize: 28,
+          fontWeight: "bold",
+          color: "#1f2937",
+          textAlign: "center",
+          marginBottom: 4,
+        }}
+      >
+        Keranjang 🛒
+      </Text>
+      <Text
+        style={{
+          fontSize: 16,
+          color: "#6b7280",
+          textAlign: "center",
+          marginBottom: 24,
+        }}
+      >
+        Review pesananmu sebelum checkout
+      </Text>
+
+      {/* Daftar Item */}
       {cart.map((item, index) => (
         <View
-          key={`${item.id}-${index}`} // ✅ key unik
+          key={`${item.id}-${index}`}
           style={{
+            backgroundColor: "#fff",
+            padding: 14,
+            borderRadius: 8,
+            marginBottom: 12,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingVertical: 8,
+            shadowColor: "#000",
+            shadowOpacity: 0.05,
+            shadowRadius: 4,
+            elevation: 2,
           }}
         >
-          <Text style={{ flex: 1 }}>
+          <Text style={{ flex: 1, fontSize: 16, fontWeight: "500", color: "#1f2937" }}>
             {item.menu} - Rp {item.harga}
           </Text>
-          <View style={{ flexDirection: "row", alignItems: "center", left: -10 }}>
+
+          {/* Quantity Control */}
+          <View style={{ flexDirection: "row", alignItems: "center", marginRight: 10 }}>
             <TouchableOpacity
               onPress={() => decreaseQty(item.id)}
               style={{
-                backgroundColor: "#ccc",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                marginRight: 5,
+                backgroundColor: "#e5e7eb",
+                paddingHorizontal: 10,
+                paddingVertical: 6,
+                borderRadius: 6,
+                marginRight: 6,
               }}
             >
-              <Text>-</Text>
+              <Text style={{ fontSize: 16, fontWeight: "600" }}>-</Text>
             </TouchableOpacity>
-            <Text>{item.quantity}</Text>
+            <Text style={{ fontSize: 16, fontWeight: "600", color: "#374151" }}>{item.quantity}</Text>
             <TouchableOpacity
               onPress={() => increaseQty(item.id)}
               style={{
-                backgroundColor: "#ccc",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                marginLeft: 5,
+                backgroundColor: "#e5e7eb",
+                paddingHorizontal: 10,
+                paddingVertical: 6,
+                borderRadius: 6,
+                marginLeft: 6,
               }}
             >
-              <Text>+</Text>
-              </TouchableOpacity>
-          </View>
-            <TouchableOpacity onPress={() => removeItem(item.id)} style={{left: 0}}>
-              <AntDesign name="minus-circle" size={18} color="black" />
+              <Text style={{ fontSize: 16, fontWeight: "600" }}>+</Text>
             </TouchableOpacity>
+          </View>
+
+          {/* Remove Item */}
+          <TouchableOpacity onPress={() => removeItem(item.id)}>
+            <AntDesign name="minus-circle" size={20} color="#ef4444" />
+          </TouchableOpacity>
         </View>
       ))}
 
-      <Text style={{ fontSize: 18, marginTop: 20 }}>Total: Rp {total}</Text>
+      {/* Total */}
+      <Text style={{ fontSize: 18, fontWeight: "600", color: "#374151", marginTop: 20 }}>
+        Total: Rp {total}
+      </Text>
 
+      {/* Konfirmasi Pesanan */}
       <TouchableOpacity
         style={{
-          backgroundColor: "green",
-          padding: 12,
-          marginTop: 20,
-          borderRadius: 5,
+          backgroundColor: "#4f46e5",
+          paddingVertical: 14,
+          borderRadius: 8,
+          marginTop: 24,
         }}
         onPress={handleConfirm}
       >
-        <Text style={{ color: "white", textAlign: "center", fontSize: 16 }}>
+        <Text style={{ color: "#fff", textAlign: "center", fontSize: 16, fontWeight: "600" }}>
           Konfirmasi Pesanan
         </Text>
       </TouchableOpacity>
