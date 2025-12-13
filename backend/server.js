@@ -10,23 +10,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // tambahan
 
 // Konfigurasi koneksi MySQL
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,          // sesuaikan dengan user MySQL kamu
   password: process.env.DB_PASSWORD,          // isi jika root punya password
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT
+  port: process.env.DB_PORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-// Tes koneksi
-db.connect((err) => {
-  if (err) {
-    console.error("❌ Gagal koneksi MySQL:", err.message);
-    process.exit(1);
-  } else {
-    console.log("✅ Terhubung ke WispByte");
-  }
-});
+// // Tes koneksi
+// db.connect((err) => {
+//   if (err) {
+//     console.error("❌ Gagal koneksi MySQL:", err.message);
+//     process.exit(1);
+//   } else {
+//     console.log("✅ Terhubung ke WispByte");
+//   }
+// });
 
 // Register endpoint
 app.post("/register", async (req, res) => {
