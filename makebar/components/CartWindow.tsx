@@ -45,7 +45,7 @@ export default function CartWindow() {
         textAlign: "center",
       }}
     >
-      Keranjang: {cart.length} item | Total: Rp {total}
+      Keranjang: {cart.length} item | Total: {new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0,}).format(total)}
     </Text>
 
     <TouchableOpacity

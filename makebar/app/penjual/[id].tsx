@@ -108,7 +108,7 @@ export default function PenjualDetailPage() {
             }}
           >
             <Text style={{ fontSize: 16, fontWeight: "500", color: "#1f2937" }}>
-              {item.menu} - Rp {item.harga}
+              {item.menu} - {new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0,}).format(item.harga)}
             </Text>
             <TouchableOpacity
               onPress={() => addToCart(item)}

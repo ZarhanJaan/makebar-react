@@ -234,7 +234,7 @@ export default function PenjualPage() {
             }}
           >
             <Text style={{ fontSize: 16, fontWeight: "500", color: "#1f2937" }}>
-              {item.menu} - Rp {item.harga}
+              {item.menu} - {new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0,}).format(Number(item.harga))}
             </Text>
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity onPress={() => handleEdit(item)} style={{ marginRight: 12 }}>

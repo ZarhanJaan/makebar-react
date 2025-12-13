@@ -109,7 +109,7 @@ export default function CheckoutPage() {
           }}
         >
           <Text style={{ flex: 1, fontSize: 16, fontWeight: "500", color: "#1f2937" }}>
-            {item.menu} - Rp {item.harga}
+            {item.menu} - {new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0,}).format(item.harga)}
           </Text>
 
           {/* Quantity Control */}
@@ -150,7 +150,7 @@ export default function CheckoutPage() {
 
       {/* Total */}
       <Text style={{ fontSize: 18, fontWeight: "600", color: "#374151", marginTop: 20 }}>
-        Total: Rp {total}
+        Total: {new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0,}).format(total)}
       </Text>
 
       {/* Konfirmasi Pesanan */}
