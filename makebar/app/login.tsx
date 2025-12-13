@@ -59,7 +59,7 @@ export default function Login() {
 
   return (
     <View style={{ padding: 20 }}>
-      <Stack.Screen options={{ headerShown: true, headerTitle: '' }}/>
+      <Stack.Screen options={{ headerShown: true, headerTitle: '', headerBackVisible: false }}/>
       <Text>Email</Text>
       <TextInput
         value={email}

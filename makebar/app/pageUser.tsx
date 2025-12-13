@@ -40,7 +40,7 @@ export default function UserPage() {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Stack.Screen options={{ headerShown: true, headerTitle: '' }}/>
+      <Stack.Screen options={{ headerShown: true, headerTitle: '', headerBackVisible: false }}/>
       <Text style={{ fontSize: 22, marginBottom: 20 }}>Halaman User</Text>
 
       {/* Tombol Logout */}

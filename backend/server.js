@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
@@ -10,11 +11,11 @@ app.use(express.urlencoded({ extended: true })); // tambahan
 
 // Konfigurasi koneksi MySQL
 const db = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",          // sesuaikan dengan user MySQL kamu
-  password: "",          // isi jika root punya password
-  database: "react_native_auth",
-  port: 3306
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,          // sesuaikan dengan user MySQL kamu
+  password: process.env.DB_PASSWORD,          // isi jika root punya password
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
 });
 
 // Tes koneksi
@@ -23,7 +24,7 @@ db.connect((err) => {
     console.error("❌ Gagal koneksi MySQL:", err.message);
     process.exit(1);
   } else {
-    console.log("✅ Terhubung ke MySQL");
+    console.log("✅ Terhubung ke WispByte");
   }
 });
 

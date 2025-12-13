@@ -1,6 +1,7 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useCart } from "../context/CartContext";
 import { useRouter, Stack } from "expo-router";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 type CartItem = {
   id: number;
@@ -33,10 +34,16 @@ export default function CheckoutPage() {
     );
   };
 
+  const removeItem = (id: number) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+    Alert.alert("Info", "Item berhasil dihapus dari keranjang");
+  };
+
   const handleConfirm = () => {
     console.log("Pesanan dikonfirmasi:", cart);
     clearCart();
     router.replace("/pageUser");
+    router.dismissAll();
   };
 
   return (
@@ -53,10 +60,10 @@ export default function CheckoutPage() {
             paddingVertical: 8,
           }}
         >
-          <Text>
+          <Text style={{ flex: 1 }}>
             {item.menu} - Rp {item.harga}
           </Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ flexDirection: "row", alignItems: "center", left: -10 }}>
             <TouchableOpacity
               onPress={() => decreaseQty(item.id)}
               style={{
@@ -79,8 +86,11 @@ export default function CheckoutPage() {
               }}
             >
               <Text>+</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
           </View>
+            <TouchableOpacity onPress={() => removeItem(item.id)} style={{left: 0}}>
+              <AntDesign name="minus-circle" size={18} color="black" />
+            </TouchableOpacity>
         </View>
       ))}
 
