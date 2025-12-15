@@ -32,6 +32,9 @@ Makebar is a simple ordering app where **users** can browse menus, add items to 
 ## ⚙️ Installation
 
 ### 1. Clone Repository
-```bash
+`bash
 git clone https://github.com/username/makebar-react.git
-cd makebar-react
+cd makebar-react`
+
+📜 License
+MIT License © 2025 Zarhan
