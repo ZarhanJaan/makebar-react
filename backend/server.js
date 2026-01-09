@@ -48,7 +48,7 @@ app.post("/register", async (req, res) => {
           console.error("MySQL Error:", err.sqlMessage);
           return res.status(500).json({ message: "Error registering user", error: err.sqlMessage });
         }
-        res.json({ message: "User registered successfully as ", role });
+        res.json({ message: "User registered successfully as ", role, success: true });
       }
     );
   } catch (error) {
@@ -78,6 +78,7 @@ app.post("/login", (req, res) => {
       if (match) {
         res.json({
           message: "Login successful",
+          success: true,
           role: results[0].role,
           id: results[0].id, // kirim id user
         });
@@ -106,7 +107,7 @@ app.post("/menu", (req, res) => {
         console.error("MySQL Error:", err.sqlMessage);
         return res.status(500).json({ message: "Gagal menambahkan menu" });
       }
-      res.json({ message: "Menu berhasil ditambahkan" });
+      res.json({ message: "Menu berhasil ditambahkan", success: true });
     }
   );
 });
@@ -120,7 +121,7 @@ app.put("/menu/:id", (req, res) => {
     [menu, harga, id],
     (err) => {
       if (err) return res.status(500).json({ message: "Gagal update menu" });
-      res.json({ message: "Menu berhasil diupdate" });
+      res.json({ message: "Menu berhasil diupdate", success: true });
     }
   );
 });
@@ -130,7 +131,7 @@ app.delete("/menu/:id", (req, res) => {
   const { id } = req.params;
   db.query("DELETE FROM menus WHERE id = ?", [id], (err) => {
     if (err) return res.status(500).json({ message: "Gagal hapus menu" });
-    res.json({ message: "Menu berhasil dihapus" });
+    res.json({ message: "Menu berhasil dihapus", success: true });
   });
 });
 

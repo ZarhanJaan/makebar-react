@@ -30,7 +30,7 @@ export default function Login() {
       const data = await res.json();
       console.log("Response:", data);
 
-      if (data.message === "Login successful") {
+      if (data.success) {
 
         // simpan id dan role ke AsyncStorage
         await AsyncStorage.setItem("userId", data.id.toString());

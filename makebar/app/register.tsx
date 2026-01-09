@@ -18,7 +18,7 @@ export default function Register() {
       const data = await res.json();
       console.log("Response:", data);
 
-      if (data.message === "User registered successfully as ") {
+      if (data.success) {
         Alert.alert("Success", `Akun berhasil dibuat sebagai ${selectedRole}`);
         router.replace("/login"); // setelah register, arahkan ke login
         console.log("Redirecting to login...")

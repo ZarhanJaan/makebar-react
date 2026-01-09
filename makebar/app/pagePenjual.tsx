@@ -55,7 +55,7 @@ export default function PenjualPage() {
           body: JSON.stringify({ menu, harga }),
         });
         const data = await res.json();
-        if (data.message.includes("berhasil")) {
+        if (data.success) {
           Alert.alert("Success", "Menu berhasil diupdate!");
           const refresh = await fetch(`http://192.168.100.7:3000/menus/${penjualId}`);
           const newData = await refresh.json();
@@ -74,7 +74,7 @@ export default function PenjualPage() {
           body: JSON.stringify({ menu, harga, penjual_id: penjualId }),
         });
         const data = await res.json();
-        if (data.message.includes("berhasil")) {
+        if (data.success) {
           Alert.alert("Success", "Menu berhasil ditambahkan!");
           const refresh = await fetch(`http://192.168.100.7:3000/menus/${penjualId}`);
           const newData = await refresh.json();
@@ -90,10 +90,8 @@ export default function PenjualPage() {
     }
   };
 
-  const handleEdit = (item: { id: number; menu: string; harga: string }) => {
-    setMenu(item.menu);
-    setHarga(item.harga.toString());
-    setEditingId(item.id);
+  const handleEdit = async () => {
+    router.replace("/editMenu");
   };
 
   const handleDelete = async (id: number) => {
@@ -102,7 +100,7 @@ export default function PenjualPage() {
         method: "DELETE",
       });
       const data = await res.json();
-      if (data.message.includes("berhasil")) {
+      if (data.success) {
         Alert.alert("Success", "Menu berhasil dihapus!");
         setItems(items.filter((item) => item.id !== id));
       } else {
@@ -237,7 +235,7 @@ export default function PenjualPage() {
               {item.menu} - {new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0,}).format(Number(item.harga))}
             </Text>
             <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity onPress={() => handleEdit(item)} style={{ marginRight: 12 }}>
+              <TouchableOpacity onPress={handleEdit} style={{ marginRight: 12 }}>
                 <Text style={{ color: "#2563eb", fontWeight: "600" }}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDelete(item.id)}>
