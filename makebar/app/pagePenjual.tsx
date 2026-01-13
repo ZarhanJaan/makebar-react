@@ -11,6 +11,7 @@ export default function PenjualPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const router = useRouter();
   useRoleGuard("penjual");
+  const domain = "http://212.227.166.131:11260";
 
   // Ambil daftar menu dari backend saat halaman dibuka
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function PenjualPage() {
       }
 
       try {
-        const res = await fetch(`http://192.168.100.7:3000/menus/${penjualId}`);
+        const res = await fetch(`${domain}/menus/${penjualId}`);
         const data = await res.json();
         setItems(data);
       } catch (err: any) {
@@ -49,7 +50,7 @@ export default function PenjualPage() {
 
       if (editingId) {
         // Update menu
-        const res = await fetch(`http://192.168.100.7:3000/menu/${editingId}`, {
+        const res = await fetch(`${domain}/menu/${editingId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ menu, harga }),
@@ -57,7 +58,7 @@ export default function PenjualPage() {
         const data = await res.json();
         if (data.success) {
           Alert.alert("Success", "Menu berhasil diupdate!");
-          const refresh = await fetch(`http://192.168.100.7:3000/menus/${penjualId}`);
+          const refresh = await fetch(`${domain}/menus/${penjualId}`);
           const newData = await refresh.json();
           setItems(newData);
           setMenu("");
@@ -68,7 +69,7 @@ export default function PenjualPage() {
         }
       } else {
         // Tambah menu baru
-        const res = await fetch("http://192.168.100.7:3000/menu", {
+        const res = await fetch(`${domain}/menu`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ menu, harga, penjual_id: penjualId }),
@@ -76,7 +77,7 @@ export default function PenjualPage() {
         const data = await res.json();
         if (data.success) {
           Alert.alert("Success", "Menu berhasil ditambahkan!");
-          const refresh = await fetch(`http://192.168.100.7:3000/menus/${penjualId}`);
+          const refresh = await fetch(`${domain}/menus/${penjualId}`);
           const newData = await refresh.json();
           setItems(newData);
           setMenu("");
@@ -96,7 +97,7 @@ export default function PenjualPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`http://192.168.100.7:3000/menu/${id}`, {
+      const res = await fetch(`${domain}/menu/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();

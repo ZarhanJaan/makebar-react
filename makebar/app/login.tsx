@@ -8,6 +8,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const domain = "http://212.227.166.131:11260";
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -16,7 +17,7 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch("http://192.168.100.7:3000/login", {
+      const res = await fetch(`${domain}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

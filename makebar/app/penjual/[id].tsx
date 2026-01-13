@@ -12,14 +12,15 @@ export default function PenjualDetailPage() {
   const [profil, setProfil] = useState<any>(null);
   const [menus, setMenus] = useState<any[]>([]);
   const { cart, setCart } = useCart();
+  const domain = "http://212.227.166.131:11260";
 
   useEffect(() => {
     const fetchData = async () => {
-      const resProfil = await fetch(`http://192.168.100.7:3000/penjuals/${id}`);
+      const resProfil = await fetch(`${domain}/penjuals/${id}`);
       const dataProfil = await resProfil.json();
       setProfil(dataProfil);
 
-      const resMenu = await fetch(`http://192.168.100.7:3000/menus/${id}`);
+      const resMenu = await fetch(`${domain}/menus/${id}`);
       const dataMenu = await resMenu.json();
       setMenus(dataMenu);
     };

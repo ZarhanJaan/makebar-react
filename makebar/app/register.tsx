@@ -7,10 +7,11 @@ export default function Register() {
   const [password, setPassword] = useState<string>("");
   // const [role, setRole] = useState("");
   const router = useRouter();
+  const domain = "http://212.227.166.131:11260";
 
   const handleRegister = async (selectedRole: string) => {
     try {
-      const res = await fetch("http://192.168.100.7:3000/register", {
+      const res = await fetch(`${domain}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, role: selectedRole }),
