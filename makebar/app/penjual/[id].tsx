@@ -12,15 +12,15 @@ export default function PenjualDetailPage() {
   const [profil, setProfil] = useState<any>(null);
   const [menus, setMenus] = useState<any[]>([]);
   const { cart, setCart } = useCart();
-  const domain = "http://212.227.166.131:11260";
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchData = async () => {
-      const resProfil = await fetch(`${domain}/penjuals/${id}`);
+      const resProfil = await fetch(`${API_URL}/penjuals/${id}`);
       const dataProfil = await resProfil.json();
       setProfil(dataProfil);
 
-      const resMenu = await fetch(`${domain}/menus/${id}`);
+      const resMenu = await fetch(`${API_URL}/menus/${id}`);
       const dataMenu = await resMenu.json();
       setMenus(dataMenu);
     };

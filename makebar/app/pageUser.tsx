@@ -9,14 +9,14 @@ export default function UserPage() {
   const [penjuals, setPenjuals] = useState<{ id: number; email: string }[]>([]);
   const { clearCart } = useCart();
   const router = useRouter();
-  const domain = "http://212.227.166.131:11260";
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
   useRoleGuard("user");
 
   // Ambil daftar penjual dari backend
   useEffect(() => {
     const fetchPenjuals = async () => {
       try {
-        const res = await fetch(`${domain}/penjuals`);
+        const res = await fetch(`${API_URL}/penjuals`);
         const data = await res.json();
         setPenjuals(data);
       } catch (err: any) {

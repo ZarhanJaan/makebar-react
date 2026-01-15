@@ -8,7 +8,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const domain = "http://212.227.166.131:11260";
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -17,7 +17,7 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch(`${domain}/login`, {
+      const res = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

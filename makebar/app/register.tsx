@@ -7,11 +7,11 @@ export default function Register() {
   const [password, setPassword] = useState<string>("");
   // const [role, setRole] = useState("");
   const router = useRouter();
-  const domain = "http://212.227.166.131:11260";
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   const handleRegister = async (selectedRole: string) => {
     try {
-      const res = await fetch(`${domain}/register`, {
+      const res = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, role: selectedRole }),
