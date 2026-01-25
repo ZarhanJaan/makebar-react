@@ -7,6 +7,7 @@ type CartItem = {
   menu: string;
   harga: number;
   quantity: number;
+  penjual_id: number;
 };
 
 export default function CartWindow() {

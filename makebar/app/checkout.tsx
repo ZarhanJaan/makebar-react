@@ -3,17 +3,22 @@ import { useCart } from "../context/CartContext";
 import { useRouter, Stack } from "expo-router";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Ionicons } from "@expo/vector-icons";
+import { useRoleGuard } from "@/hooks/useRoleGuard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type CartItem = {
   id: number;
   menu: string;
   harga: number;
   quantity: number;
+  penjual_id: number;
 };
 
 export default function CheckoutPage() {
   const { cart, setCart, clearCart } = useCart();
   const router = useRouter();
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  useRoleGuard("user");
 
   const total = cart.reduce((sum, item) => sum + item.harga * item.quantity, 0);
 
@@ -40,12 +45,60 @@ export default function CheckoutPage() {
     Alert.alert("Info", "Item berhasil dihapus dari keranjang");
   };
 
-  const handleConfirm = () => {
-    console.log("Pesanan dikonfirmasi:", cart);
-    clearCart();
-    router.replace("/pageUser");
-    router.dismissAll();
-  };
+  const handleConfirm = async () => {
+  try {
+    const userId = await AsyncStorage.getItem("userId");
+    const userEmail = await AsyncStorage.getItem("userEmail"); // ambil email user
+    if (!userId || !userEmail) {
+      Alert.alert("Error", "User belum login");
+      return;
+    }
+
+    if (cart.length === 0) {
+      Alert.alert("Error", "Keranjang kosong");
+      return;
+    }
+
+    const penjualId = cart[0].penjual_id;
+    if (!penjualId) {
+      Alert.alert("Error", "Data penjual tidak ditemukan di cart");
+      return;
+    }
+
+    // Payload checkout
+    const payload = {
+      user_id: Number(userId),   // angka id user
+      user_email: userEmail,     // email user
+      penjual_id: penjualId,
+      items: cart.map((item) => ({
+        menu_id: item.id,
+        harga: item.harga,
+        quantity: item.quantity || 1,
+      })),
+    };
+
+    console.log("Payload dikirim:", payload);
+
+    const res = await fetch(`${API_URL}/checkout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    console.log("Respons:", data);
+
+    if (data.success) {
+      Alert.alert("Success", "Berhasil Checkout pesanan");
+      clearCart();
+      router.replace("/pageUser");
+    } else {
+      Alert.alert("Error", data.message || "Checkout gagal");
+    }
+  } catch (err: any) {
+    Alert.alert("Error", err.message);
+  }
+};
 
   return (
     <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 120, backgroundColor: "#f9fafb" }}>
@@ -109,7 +162,11 @@ export default function CheckoutPage() {
           }}
         >
           <Text style={{ flex: 1, fontSize: 16, fontWeight: "500", color: "#1f2937" }}>
-            {item.menu} - {new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0,}).format(item.harga)}
+            {item.menu} - {new Intl.NumberFormat("id-ID", {
+              style: "currency",
+              currency: "IDR",
+              minimumFractionDigits: 0,
+            }).format(item.harga)}
           </Text>
 
           {/* Quantity Control */}
@@ -150,7 +207,11 @@ export default function CheckoutPage() {
 
       {/* Total */}
       <Text style={{ fontSize: 18, fontWeight: "600", color: "#374151", marginTop: 20 }}>
-        Total: {new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0,}).format(total)}
+        Total: {new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(total)}
       </Text>
 
       {/* Konfirmasi Pesanan */}

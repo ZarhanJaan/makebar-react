@@ -35,6 +35,7 @@ export default function Login() {
 
         // simpan id dan role ke AsyncStorage
         await AsyncStorage.setItem("userId", data.id.toString());
+        await AsyncStorage.setItem("userEmail", data.email)
         await AsyncStorage.setItem("role", data.role);
 
         // redirect sesuai role

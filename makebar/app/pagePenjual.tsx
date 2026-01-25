@@ -10,6 +10,7 @@ export default function PenjualPage() {
   const [items, setItems] = useState<{ id: number; menu: string; harga: string }[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const router = useRouter();
+  const [role, setRole] = useState<string | null>(null);
   useRoleGuard("penjual");
   const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -91,8 +92,8 @@ export default function PenjualPage() {
     }
   };
 
-  const handleEdit = async () => {
-    router.replace("/editMenu");
+  const handleEdit = (id: number) => {
+  router.replace({ pathname: "/editMenu/[id]", params: { id: id.toString() } });
   };
 
   const handleDelete = async (id: number) => {
@@ -120,132 +121,144 @@ export default function PenjualPage() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#f9fafb", padding: 20 }}>
-      <Stack.Screen options={{ headerShown: false }} />
+  <View style={{ flex: 1, backgroundColor: "#f9fafb", padding: 20 }}>
+    <Stack.Screen options={{ headerShown: false }} />
 
-      {/* Judul */}
-      <Text
-        style={{
-          fontSize: 28,
-          fontWeight: "bold",
-          color: "#1f2937",
-          textAlign: "center",
-          marginTop: 40,
-          marginBottom: 4,
-        }}
-      >
-        Halaman Penjual 🛒
+    {/* Judul */}
+    <Text
+      style={{
+        fontSize: 28,
+        fontWeight: "bold",
+        color: "#1f2937",
+        textAlign: "center",
+        marginTop: 40,
+        marginBottom: 4,
+      }}
+    >
+      Halaman Penjual 🛒
+    </Text>
+    <Text
+      style={{
+        fontSize: 16,
+        color: "#6b7280",
+        textAlign: "center",
+        marginBottom: 24,
+      }}
+    >
+      Kelola menu jualanmu di sini
+    </Text>
+
+    {/* Tombol Logout */}
+    <TouchableOpacity
+      onPress={handleLogout}
+      style={{
+        backgroundColor: "#ef4444",
+        paddingVertical: 14,
+        borderRadius: 8,
+        marginBottom: 20,
+      }}
+    >
+      <Text style={{ color: "#fff", fontWeight: "600", textAlign: "center", fontSize: 16 }}>
+        Logout
       </Text>
-      <Text
-        style={{
-          fontSize: 16,
-          color: "#6b7280",
-          textAlign: "center",
-          marginBottom: 24,
-        }}
-      >
-        Kelola menu jualanmu di sini
-      </Text>
+    </TouchableOpacity>
 
-      {/* Tombol Logout */}
-      <TouchableOpacity
-        onPress={handleLogout}
-        style={{
-          backgroundColor: "#ef4444",
-          paddingVertical: 14,
-          borderRadius: 8,
-          marginBottom: 20,
-        }}
-      >
-        <Text style={{ color: "#fff", fontWeight: "600", textAlign: "center", fontSize: 16 }}>
-          Logout
-        </Text>
-      </TouchableOpacity>
+    {/* Input Nama Menu */}
+    <Text style={{ fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 6 }}>Nama Menu</Text>
+    <TextInput
+      value={menu}
+      onChangeText={setMenu}
+      placeholder="Masukkan nama menu"
+      placeholderTextColor="#aaa"
+      style={{
+        borderWidth: 1,
+        borderColor: "#d1d5db",
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 16,
+        backgroundColor: "#fff",
+      }}
+    />
 
-      {/* Input Nama Menu */}
-      <Text style={{ fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 6 }}>Nama Menu</Text>
-      <TextInput
-        value={menu}
-        onChangeText={setMenu}
-        placeholder="Masukkan nama menu"
-        placeholderTextColor="#aaa"
-        style={{
-          borderWidth: 1,
-          borderColor: "#d1d5db",
-          borderRadius: 8,
-          padding: 12,
-          marginBottom: 16,
-          backgroundColor: "#fff",
-        }}
-      />
-
-      {/* Input Harga */}
-      <Text style={{ fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 6 }}>Harga</Text>
-      <TextInput
-        value={harga}
-        onChangeText={setHarga}
-        keyboardType="numeric"
-        placeholder="Masukkan harga"
-        placeholderTextColor="#aaa"
-        style={{
-          borderWidth: 1,
-          borderColor: "#d1d5db",
-          borderRadius: 8,
-          padding: 12,
-          marginBottom: 20,
-          backgroundColor: "#fff",
-        }}
-      />
-
-      {/* Tombol Tambah/Update Menu */}
-      <TouchableOpacity
-        onPress={handleAddOrUpdateMenu}
-        style={{
-          backgroundColor: "#4f46e5",
-          paddingVertical: 14,
-          borderRadius: 8,
-          marginBottom: 24,
-        }}
-      >
-        <Text style={{ color: "#fff", fontWeight: "600", textAlign: "center", fontSize: 16 }}>
-          {editingId ? "Update Menu" : "Tambah Menu"}
-        </Text>
-      </TouchableOpacity>
-
-      {/* Daftar Menu */}
-      <Text style={{ fontSize: 18, fontWeight: "600", color: "#374151", marginBottom: 12 }}>Daftar Menu</Text>
-      <FlatList
-        data={items}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View
-            style={{
-              backgroundColor: "#fff",
-              padding: 14,
-              borderRadius: 8,
-              marginBottom: 12,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              shadowColor: "#000",
-              shadowOpacity: 0.05,
-              shadowRadius: 4,
-              elevation: 2,
-            }}
-          >
-            <Text style={{ fontSize: 16, fontWeight: "500", color: "#1f2937" }}>
-              {item.menu} - {new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0,}).format(Number(item.harga))}
-            </Text>
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity onPress={handleEdit} style={{ marginRight: 12 }}>
-                <Text style={{ color: "#2563eb", fontWeight: "600" }}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                <Text style={{ color: "#ef4444", fontWeight: "600" }}>Hapus</Text>
-              </TouchableOpacity>
-            </View>
+    {/* Input Harga */}
+    <Text style={{ fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 6 }}>Harga</Text>
+    <TextInput
+      value={harga}
+      onChangeText={setHarga}
+      keyboardType="numeric"
+      placeholder="Masukkan harga"
+      placeholderTextColor="#aaa"
+      style={{
+        borderWidth: 1,
+        borderColor: "#d1d5db",
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 20,
+        backgroundColor: "#fff",
+      }}
+    />
+    
+    {/* Daftar Menu */}
+    <Text style={{ fontSize: 18, fontWeight: "600", color: "#374151", marginBottom: 12 }}>Daftar Menu</Text>
+    <FlatList
+      data={items}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => (
+        <View
+          style={{
+            backgroundColor: "#fff",
+            padding: 14,
+            borderRadius: 8,
+            marginBottom: 12,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            shadowColor: "#000",
+            shadowOpacity: 0.05,
+            shadowRadius: 4,
+            elevation: 2,
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: "500", color: "#1f2937" }}>
+            {item.menu} -{" "}
+            {new Intl.NumberFormat("id-ID", {
+              style: "currency",
+              currency: "IDR",
+              minimumFractionDigits: 0,
+            }).format(Number(item.harga))}
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            {/* Edit button: gunakan arrow function agar id dikirim */}
+            <TouchableOpacity onPress={() => handleEdit(item.id)} style={{ marginRight: 12 }}>
+              <Text style={{ color: "#2563eb", fontWeight: "600" }}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleDelete(item.id)}>
+              <Text style={{ color: "#ef4444", fontWeight: "600" }}>Hapus</Text>
+            </TouchableOpacity>
           </View>
-        )}
-      />
-    </View>
-  );
+        </View>
+      )}
+    />
+    {/* Floating Icon hanya muncul jika role = penjual */}
+    <TouchableOpacity
+      onPress={() => router.replace("/OrdersPage")}
+      style={{
+        position: "absolute",
+        bottom: 30,
+        right: 30,
+        backgroundColor: "#4f46e5",
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
+      }}
+    >
+      <Text style={{ color: "#fff", fontSize: 28 }}>📦</Text>
+    </TouchableOpacity>
+  </View>
+);
 }
